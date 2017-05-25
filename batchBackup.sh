@@ -53,15 +53,15 @@ then
 
 else
 
-  currentdate=$1
-  loopenddate=$(/bin/date --date "$2 1 day" +%Y-%m-%d)
+  currentdate=$2
+  loopenddate=$(/bin/date --date "$3 1 day" +%Y-%m-%d)
 
   until [ "$currentdate" == "$loopenddate" ]
   do
     echo $currentdate
 
     # call the upload script - logstash-2017.01.05
-    INDEX=$ESPREFIX-$(date -j -f "%s" $currentdate "+%Y.%m.%d")
+    INDEX=$ESPREFIX-$(date -d $currentdate "+%Y.%m.%d")
     echo ""
     echo ">>>>>>>>> Starting backup for $INDEX"
      echo ""
