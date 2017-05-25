@@ -17,6 +17,9 @@
 set -e
 source credentials.txt
 
+INDEX=${1:-$INDEX}
+
+
 EXPORTFILEMAPPING=./tmp/$INDEX'-mapping.json'
 EXPORTFILE=./tmp/$INDEX'.json'
 
@@ -43,17 +46,20 @@ echo "#######################"
 echo ""
 
 if [[ $UPLOADINDEX -eq 1 ]]; then
-aws s3 cp $EXPORTFILEMAPPING s3://$UPLOADLOC/$EXPORTFILEMAPPING
-echo ""
-echo "Uploaded mapping "$EXPORTFILEMAPPING
-echo "#######################"
-echo ""
+find ./tmp -type f | while read line
 
-aws s3 cp $EXPORTFILE s3://$UPLOADLOC/$EXPORTFILE
-echo ""
-echo "Uploaded mapping "$EXPORTFILE
-echo "#######################"
-echo ""
+do
+if [ -e "$line" ]; then
+FILENAME="${line##*/}"
+echo "Uploading $line to S3 $FILENAME"
+aws s3 cp $line s3://$UPLOADLOC/$FILENAME
+if [[ $? -eq 0 ]]; then
+rm $line
+echo "Upload complete and local file delete: $line"
+fi
+fi
+done
+
 fi
 
 # close index
@@ -73,10 +79,6 @@ echo "Deleted "$INDEX
 echo "#######################"
 echo ""
 fi
-
-# clean up and remove local files
-rm $EXPORTFILEMAPPING
-rm $EXPORTFILE
 
 
 echo "BACKUP COMPLETE"
