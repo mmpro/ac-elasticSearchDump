@@ -13,14 +13,13 @@
 #DELETEINDEX=1
 ############
 
+# exit on error
+set -e
 source credentials.txt
 
 EXPORTFILEMAPPING=./tmp/$INDEX'-mapping.json'
 EXPORTFILE=./tmp/$INDEX'.json'
 
-# remove files if existing
-rm $EXPORTFILEMAPPING
-rm $EXPORTFILE
 
 # flush index
 curl -X POST https://$ESURL/$INDEX/_flush -u $AUTH

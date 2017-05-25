@@ -1,4 +1,4 @@
-#AC Elastic Search Dump
+# AC Elastic Search Dump
 
 A little Bash script to flush, export, upload to S3 and close or delete indices.
 
